@@ -1,4 +1,4 @@
-// app/GlobalContext.js
+// context/GlobalContext.js
 import React, { createContext, useState } from 'react';
 
 export const GlobalContext = createContext();

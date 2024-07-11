@@ -1,7 +1,7 @@
 // components/DoctorList.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { typography, colors } from '../styles/styles';
+import { typography, listStyles } from '../styles/styles';
 
 const DoctorList = () => {
     const [doctors, setDoctors] = useState([]);
@@ -22,9 +22,9 @@ const DoctorList = () => {
     };
 
     return (
-        <View>
+        <View style={listStyles.list}>
             {doctors.map((doctor) => (
-                <View key={doctor.id} style={styles.doctorItem}>
+                <View key={doctor.id} style={listStyles.listItem}>
                     <Text style={typography.subheader}>{doctor.name}</Text>
                     <Text style={typography.body}>{doctor.speciality}</Text>
                 </View>
@@ -32,19 +32,5 @@ const DoctorList = () => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    doctorItem: {
-        backgroundColor: colors.white,
-        padding: 15,
-        borderRadius: 5,
-        marginBottom: 10,
-        shadowColor: colors.text,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 2,
-    },
-});
 
 export default DoctorList;

@@ -5,6 +5,7 @@ import { View, Text, TextInput, ActivityIndicator, Pressable, StyleSheet } from 
 import { LinearGradient } from 'expo-linear-gradient';
 import { GlobalContext } from '../context/GlobalContext';
 import { getStoredValue, storeValue } from '../utils/storage';
+import { colors, typography, layoutStyle, buttons, formStyles } from '../styles/styles';
 
 export default function Index() {
     const { isLoading, setIsLoading, user, setUser } = useContext(GlobalContext);
@@ -36,8 +37,8 @@ export default function Index() {
     if (isLoading) {
         console.log('loading');
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <ActivityIndicator size="large" color="#ff0000" />
+            <View style={layoutStyle.centered}>
+                <ActivityIndicator size="large" color={colors.primary} />
             </View>
         );
     }
@@ -57,81 +58,29 @@ export default function Index() {
 
     // show login form if loading is done and user does not exist in local storage
     return (
-        <LinearGradient
-            colors={['#4c669f', '#3b5998', '#192f6a']}
-            style={styles.container}
-        >
-            <View style={styles.innerContainer}>
-                <Text style={styles.title}>Login</Text>
+        <View style={layoutStyle.container}>
+            <View style={layoutStyle.innerContainer}>
+                <Text style={[typography.header, { marginBottom: 16 }]}>Login</Text>
                 <TextInput
-                    style={styles.input}
+                    style={formStyles.input}
                     placeholder="Email"
                     value={email}
                     onChangeText={setEmail}
                     keyboardType="email-address"
                     autoCapitalize="none"
-                    placeholderTextColor={styles.placeholderText.color}
                 />
                 <TextInput
-                    style={styles.input}
+                    style={formStyles.input}
                     placeholder="Password"
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry
-                    placeholderTextColor={styles.placeholderText.color}
+                    textContentType="password"
                 />
-                <Pressable style={styles.button} onPress={handleLogin}>
-                    <Text style={styles.buttonText}>Login</Text>
+                <Pressable style={buttons.primary} onPress={handleLogin}>
+                    <Text style={buttons.primaryText}>Login</Text>
                 </Pressable>
             </View>
-        </LinearGradient>
+        </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-    },
-    innerContainer: {
-        margin: 16,
-        backgroundColor: 'rgba(255, 255, 255, 0.85)',
-        borderRadius: 10,
-        padding: 16,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-    },
-    title: {
-        fontSize: 24,
-        marginBottom: 16,
-        textAlign: 'center',
-        color: '#3b5998',
-    },
-    input: {
-        height: 40,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        marginBottom: 12,
-        paddingHorizontal: 8,
-        borderRadius: 5,
-    },
-    placeholderText: {
-        color: '#ccc',
-    },
-    button: {
-        backgroundColor: '#3b5998',
-        paddingVertical: 10,
-        borderRadius: 5,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 16,
-    },
-});

@@ -1,4 +1,4 @@
-// storage.js
+// utils/storage.js
 import { Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 

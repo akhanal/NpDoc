@@ -6,7 +6,8 @@ import {GlobalContext} from "../context/GlobalContext";
 import {getStoredValue} from "../utils/storage";
 
 import DoctorList from '../components/DoctorList';
-import { layoutStyle, typography } from '../styles/styles';
+import { layoutStyle, typography, listStyles, colors } from '../styles/styles';
+import {LinearGradient} from "expo-linear-gradient";
 
 
 export default function Home() {
@@ -33,10 +34,10 @@ export default function Home() {
     if(user && !isLoading) {
         return (
             <View style={layoutStyle.container}>
-                <Text style={[typography.header, {marginBottom: 10}]}>Welcome!</Text>
-                <Text style={[typography.body, {marginBottom: 20}]}>Logged in as: {user.username}</Text>
-                <Text style={[typography.subheader, {marginBottom: 20}]}>Doctors List</Text>
-                <DoctorList/>
+                <Text style={[typography.header, { marginBottom: 10 }]}>Welcome!</Text>
+                <Text style={[typography.body, { marginBottom: 20 }]}>Logged in as: {user.username}</Text>
+                <Text style={[typography.subheader, { marginBottom: 20 }]}>Doctors List</Text>
+                <DoctorList />
             </View>
         );
     }
