@@ -4,7 +4,7 @@ import { Link, useRouter } from 'expo-router';
 import { View, Text, TextInput, ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GlobalContext } from './GlobalContext';
-import { getValue, setValue } from './storage';
+import { getStoredValue, storeValue } from './storage';
 
 export default function Index() {
     const { isLoading, setIsLoading, user, setUser } = useContext(GlobalContext);
@@ -15,7 +15,7 @@ export default function Index() {
 
     // try to load user from storage
     useEffect(() => {
-        getValue('user').then((res) => {
+        getStoredValue('user').then((res) => {
             console.log('retrieved user');
             setUser(res);
             setIsLoading(false);
@@ -45,11 +45,11 @@ export default function Index() {
     const handleLogin = () => {
         // Handle login logic here
         // For example, authenticate the user and navigate to the home screen
-        if (email === 'test@example.com' && password === 'password') {
+        if (email === 'ankit@yasok.co' || email === 'achyut@yasok.co' && password === 'password') {
             console.log('login successful with email and password');
             const loggedInUser = {username: email, password: password};
-            setUser(email);
-            setValue('user', email).then(()=>router.push('home'));
+            setUser(loggedInUser);
+            storeValue('user', loggedInUser).then(()=>router.push('home'));
         } else {
             alert('Invalid credentials');
         }

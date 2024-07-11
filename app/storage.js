@@ -2,7 +2,7 @@
 import { Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
-export const getValue = async (key) => {
+export const getStoredValue = async (key) => {
     let value = null;
     if (Platform.OS === 'web') {
         // Use localStorage or sessionStorage for web
@@ -11,17 +11,17 @@ export const getValue = async (key) => {
         // Use SecureStore for mobile platforms
         value = await SecureStore.getItemAsync(key);
     }
-    return value;
+    return value?JSON.parse(value):null;
 };
 
-export const setValue = async (key, value) => {
+export const storeValue = async (key, value) => {
     try {
         if (Platform.OS === 'web') {
             // Use localStorage for web
-            window.localStorage.setItem(key, value);
+            window.localStorage.setItem(key, JSON.stringify(value));
         } else {
             // Use SecureStore for mobile platforms
-            await SecureStore.setItemAsync(key, value);
+            await SecureStore.setItemAsync(key, JSON.stringify(value));
         }
         console.log(`Stored ${value} with key ${key}`);
     } catch (error) {
