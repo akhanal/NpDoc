@@ -2,7 +2,7 @@
 import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
-import { GlobalProvider } from './GlobalContext';
+import { GlobalProvider } from '../context/GlobalContext';
 
 
 export default function Layout() {    return (

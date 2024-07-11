@@ -3,8 +3,8 @@ import React, {useContext, useEffect, useState} from 'react';
 import { Link, useRouter } from 'expo-router';
 import { View, Text, TextInput, ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { GlobalContext } from './GlobalContext';
-import { getStoredValue, storeValue } from './storage';
+import { GlobalContext } from '../context/GlobalContext';
+import { getStoredValue, storeValue } from '../utils/storage';
 
 export default function Index() {
     const { isLoading, setIsLoading, user, setUser } = useContext(GlobalContext);
@@ -16,7 +16,7 @@ export default function Index() {
     // try to load user from storage
     useEffect(() => {
         getStoredValue('user').then((res) => {
-            console.log('retrieved user');
+            console.log(`retrieved user ${res}`);
             setUser(res);
             setIsLoading(false);
         });
@@ -34,7 +34,7 @@ export default function Index() {
 
     // show loading indicator while loading
     if (isLoading) {
-        console.log('retrieving user and loading');
+        console.log('loading');
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <ActivityIndicator size="large" color="#ff0000" />

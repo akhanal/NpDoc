@@ -2,8 +2,12 @@
 import {Link, router} from 'expo-router';
 import { View, Text } from 'react-native';
 import {useContext, useEffect} from "react";
-import {GlobalContext} from "./GlobalContext";
-import {getStoredValue} from "./storage";
+import {GlobalContext} from "../context/GlobalContext";
+import {getStoredValue} from "../utils/storage";
+
+import DoctorList from '../components/DoctorList';
+import { layoutStyle, typography } from '../styles/styles';
+
 
 export default function Home() {
     const { isLoading, setIsLoading, user, setUser } = useContext(GlobalContext);
@@ -26,10 +30,15 @@ export default function Home() {
         }
     }, [isLoading, user]);
 
-    return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text>Welcome {user?user.username:''}</Text>
-            <Link href="/c">Go to Screen C</Link>
-        </View>
-    );
+    if(user && !isLoading) {
+        return (
+            <View style={layoutStyle.container}>
+                <Text style={[typography.header, {marginBottom: 10}]}>Welcome!</Text>
+                <Text style={[typography.body, {marginBottom: 20}]}>Logged in as: {user.username}</Text>
+                <Text style={[typography.subheader, {marginBottom: 20}]}>Doctors List</Text>
+                <DoctorList/>
+            </View>
+        );
+    }
+    return null;//
 }

@@ -4,14 +4,21 @@ import * as SecureStore from 'expo-secure-store';
 
 export const getStoredValue = async (key) => {
     let value = null;
-    if (Platform.OS === 'web') {
-        // Use localStorage or sessionStorage for web
-        value = window.localStorage.getItem(key);
-    } else {
-        // Use SecureStore for mobile platforms
-        value = await SecureStore.getItemAsync(key);
+    let valueObj = null;
+
+    try{
+        if (Platform.OS === 'web') {
+            // Use localStorage or sessionStorage for web
+            value = window.localStorage.getItem(key);
+        } else {
+            // Use SecureStore for mobile platforms
+            value = await SecureStore.getItemAsync(key);
+        }
+        valueObj = JSON.parse(value);
+    }catch(error) {
+        console.error(`Error retrieving value with key ${key}: ${error.message}`);
     }
-    return value?JSON.parse(value):null;
+    return valueObj;
 };
 
 export const storeValue = async (key, value) => {
