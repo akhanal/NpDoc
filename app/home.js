@@ -1,4 +1,4 @@
-// app/home.js (Screen Home)
+// app/home.js (Home page)
 import {Link, router} from 'expo-router';
 import { View, Text } from 'react-native';
 import {useContext, useEffect} from "react";

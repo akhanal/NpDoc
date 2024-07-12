@@ -1,4 +1,4 @@
-// app/index.js (Screen A)
+// app/index.js (Login and default page)
 import React, {useContext, useEffect, useState} from 'react';
 import { Link, useRouter } from 'expo-router';
 import { View, Text, TextInput, ActivityIndicator, Pressable, StyleSheet } from 'react-native';
