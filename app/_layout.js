@@ -12,7 +12,7 @@ export default function Layout() {    return (
         <Drawer>
             <Drawer.Screen name="index" options={{ title: 'Login' }} />
             <Drawer.Screen name="home"  options={{ title: 'Home' }} />
-            <Drawer.Screen name="c"  options={{ title: 'Screen C' }} />
+            <Drawer.Screen name="doctor-details" options={{ title: 'Doctor Details' }} />
         </Drawer>
         </GlobalProvider>
     </GestureHandlerRootView>
