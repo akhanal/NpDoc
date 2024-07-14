@@ -44,16 +44,38 @@ export default function Index() {
     }
 
     const handleLogin = () => {
-        // Handle login logic here
-        // For example, authenticate the user and navigate to the home screen
-        if (email === 'ankit@yasok.co' || email === 'achyut@yasok.co' && password === 'password') {
-            console.log('login successful with email and password');
-            const loggedInUser = {username: email, password: password};
-            setUser(loggedInUser);
-            storeValue('user', loggedInUser).then(()=>router.push('home'));
-        } else {
-            alert('Invalid credentials');
-        }
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({email: email, password: password})
+        };
+
+        fetch('http://localhost:8080/api/login', requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.email) {
+                    console.log('login successful with email and password');
+                    const loggedInUser = {
+                        id: data.id,
+                        username: data.email,
+                        fullName: data.fullName,
+                        userType: data.userType
+                    };
+                    setUser(loggedInUser);
+                    storeValue('user', loggedInUser).then(()=>router.push('/home'));
+                } else {
+                    alert('Invalid credentials');
+                }
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+                alert('There was an error logging in. Please try again.');
+            });
     };
 
     // show login form if loading is done and user does not exist in local storage

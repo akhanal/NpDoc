@@ -34,7 +34,7 @@ export default function Home() {
     if(user && !isLoading) {
         return (
             <View style={layoutStyle.container}>
-                <Text style={[typography.header, { marginBottom: 10 }]}>Welcome!</Text>
+                <Text style={[typography.header, { marginBottom: 10 }]}>Welcome! {user.fullName}</Text>
                 <Text style={[typography.body, { marginBottom: 20 }]}>Logged in as: {user.username}</Text>
                 <Text style={[typography.subheader, { marginBottom: 20 }]}>Doctors List</Text>
                 <DoctorList />

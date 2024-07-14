@@ -25,7 +25,7 @@ const DoctorDetails = () => {
     };
     return (
         <View style={layoutStyle.container}>
-            <Text style={typography.header}>{parsedDoctor?.name}</Text>
+            <Text style={typography.header}>{parsedDoctor?.fullName}</Text>
             <Text style={typography.body}>{parsedDoctor?.speciality}</Text>
             <Pressable style={buttons.primary} onPress={() => handleChatPress(parsedDoctor?.id)}>
                 <Text style={buttons.primaryText}>Chat</Text>

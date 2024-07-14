@@ -8,6 +8,7 @@ const DoctorList = () => {
     const [doctors, setDoctors] = useState([]);
     const navigation = useNavigation();
 
+    /*
     useEffect(() => {
         // Simulated API call to fetch doctors
         const mockDoctors = [
@@ -17,6 +18,14 @@ const DoctorList = () => {
             { id: 4, name: 'Dr. Achyut B. Hamal', speciality: 'Hepatology' },
         ];
         setDoctors(mockDoctors);
+    }, []);
+    */
+
+    useEffect(() => {
+        fetch('http://localhost:8080/api/doctors')
+            .then(response => response.json())
+            .then(data => setDoctors(data))
+            .catch(error => console.error('Error:', error));
     }, []);
 
     const handleDoctorPress = (doctor) => {
@@ -35,7 +44,7 @@ const DoctorList = () => {
                     style={listStyles.listItem}
                     onPress={() => handleDoctorPress(doctor)}
                 >
-                    <Text style={typography.subheader}>{doctor.name}</Text>
+                    <Text style={typography.subheader}>{doctor.fullName}</Text>
                     <Text style={typography.body}>{doctor.speciality}</Text>
                 </Pressable>
             ))}
