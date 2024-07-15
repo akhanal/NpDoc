@@ -1,4 +1,4 @@
-// app/DoctorList.js
+// components/DoctorList.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { useNavigation } from 'expo-router'; // Import useNavigation from expo-router
