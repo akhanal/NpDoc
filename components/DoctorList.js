@@ -15,7 +15,6 @@ const DoctorList = () => {
             { id: 1, name: 'Dr. John Doe', speciality: 'Cardiology' },
             { id: 2, name: 'Dr. Jane Smith', speciality: 'Pediatrics' },
             { id: 3, name: 'Dr. Mike Johnson', speciality: 'Neurology' },
-            { id: 4, name: 'Dr. Achyut B. Hamal', speciality: 'Hepatology' },
         ];
         setDoctors(mockDoctors);
     }, []);
