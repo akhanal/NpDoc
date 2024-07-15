@@ -10,6 +10,25 @@ NpDoc is a mobile application that facilitates interaction between patients and 
 - Chat or call a doctor
 
 ## Code Organization
+```plaintext
+NpDoc/
+├── app/
+│   ├── _layout.js           # Defines the app layout and routes
+│   ├── index.js             # Landing page for login
+│   ├── home.js              # Home page displaying list of doctors
+│   ├── doctor-details.js    # Doctor details page
+│   └── components/
+│       └── DoctorList.js    # Component to list doctors
+├── context/
+│   └── GlobalContext.js     # Global context to manage user state
+├── utils/
+│   └── storage.js           # Utility functions for local storage
+├── styles/
+│   └── styles.js            # Contains styles for colors, typography, layout, buttons, lists, and forms
+├── babel.config.js          # Babel configuration file
+├── package.json             # Project metadata and dependencies
+└── README.md                # Project documentation
+```
 
 ### Main Components
 
