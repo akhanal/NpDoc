@@ -17,7 +17,7 @@ export default function Index() {
     // try to load user from storage
     useEffect(() => {
         getStoredValue('user').then((res) => {
-            console.log(`retrieved user ${res}`);
+            console.log(`retrieved user from store at index page ${res}`);
             setUser(res);
             setIsLoading(false);
         });

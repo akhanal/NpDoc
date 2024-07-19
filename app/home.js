@@ -1,23 +1,38 @@
 // app/home.js (Home page)
-import {Link, router} from 'expo-router';
-import { View, Text } from 'react-native';
-import {useContext, useEffect} from "react";
+import {Link, router, useNavigation} from 'expo-router';
+import {View, Text, Pressable} from 'react-native';
+import React, {useContext, useEffect, useState} from "react";
 import {GlobalContext} from "../context/GlobalContext";
 import {getStoredValue} from "../utils/storage";
 
-import DoctorList from '../components/DoctorList';
 import { layoutStyle, typography, listStyles, colors } from '../styles/styles';
-import {LinearGradient} from "expo-linear-gradient";
-
 
 export default function Home() {
-    const { isLoading, setIsLoading, user, setUser } = useContext(GlobalContext);
+    const { isLoading, setIsLoading, user, setUser, setSelectedDoctor } = useContext(GlobalContext);
+    const [doctors, setDoctors] = useState([]);
+    const navigation = useNavigation();
+
+    const fetchDoctors = () => {
+        fetch('http://localhost:8080/api/doctors')
+            .then(response => response.json())
+            .then(data => setDoctors(data))
+            .catch(error => console.error('Error:', error));
+    };
+
+    const handleDoctorPress = (doctor) => {
+        setSelectedDoctor(doctor);
+        // Navigate to DoctorDetails screen with doctor data
+        navigation.navigate({
+            name: 'doctor-details'
+        });
+    };
 
     // try to load user from storage
     useEffect(() => {
+        fetchDoctors();
         if(!user) {
             getStoredValue('user').then((res) => {
-                console.log('retrieved user');
+                console.log('retrieved user from store in home page');
                 setUser(res);
                 setIsLoading(false);
             });
@@ -37,7 +52,18 @@ export default function Home() {
                 <Text style={[typography.header, { marginBottom: 10 }]}>Welcome! {user.fullName}</Text>
                 <Text style={[typography.body, { marginBottom: 20 }]}>Logged in as: {user.username}</Text>
                 <Text style={[typography.subheader, { marginBottom: 20 }]}>Doctors List</Text>
-                <DoctorList />
+                <View style={listStyles.list}>
+                    {doctors.map((doctor) => (
+                        <Pressable
+                            key={doctor.id}
+                            style={listStyles.listItem}
+                            onPress={() => handleDoctorPress(doctor)}
+                        >
+                            <Text style={typography.subheader}>{doctor.fullName}</Text>
+                            <Text style={typography.body}>{doctor.speciality}</Text>
+                        </Pressable>
+                    ))}
+                </View>
             </View>
         );
     }

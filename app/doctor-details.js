@@ -1,14 +1,14 @@
 // app/DoctorDetails.js
-import React from 'react';
+import React, {useContext} from 'react';
 import {View, Text, Pressable} from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
 import { layoutStyle, typography, buttons } from '../styles/styles';
+import {GlobalContext} from "../context/GlobalContext";
 
 const DoctorDetails = () => {
-    const { doctor } = useLocalSearchParams();
-    const parsedDoctor = doctor ? JSON.parse(doctor) : null;
+    const { user, selectedDoctor } = useContext(GlobalContext);
+
     // Handle scenario where doctor may not be available
-    if (!parsedDoctor) {
+    if (!selectedDoctor) {
         return (
             <View style={layoutStyle.container}>
                 <Text style={typography.header}>Doctor Details</Text>
@@ -25,13 +25,13 @@ const DoctorDetails = () => {
     };
     return (
         <View style={layoutStyle.container}>
-            <Text style={typography.header}>{parsedDoctor?.fullName}</Text>
-            <Text style={typography.body}>{parsedDoctor?.speciality}</Text>
-            <Pressable style={buttons.primary} onPress={() => handleChatPress(parsedDoctor?.id)}>
+            <Text style={typography.header}>{selectedDoctor?.fullName}</Text>
+            <Text style={typography.body}>{selectedDoctor?.speciality}</Text>
+            <Pressable style={buttons.primary} onPress={() => handleChatPress(selectedDoctor?.id)}>
                 <Text style={buttons.primaryText}>Chat</Text>
             </Pressable>
 
-            <Pressable style={buttons.primary} onPress={() => handleCallPress(parsedDoctor?.id)}>
+            <Pressable style={buttons.primary} onPress={() => handleCallPress(selectedDoctor?.id)}>
                 <Text style={buttons.primaryText}>Call</Text>
             </Pressable>
         </View>
