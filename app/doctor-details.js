@@ -1,14 +1,17 @@
 // app/DoctorDetails.js
-import React, {useContext} from 'react';
-import {View, Text, Pressable} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {View, Text, Pressable, Button} from 'react-native';
 import { layoutStyle, typography, buttons } from '../styles/styles';
 import {GlobalContext} from "../context/GlobalContext";
+import {VideoCall} from "../components/VideoCall";
 
 const DoctorDetails = () => {
     const { user, selectedDoctor } = useContext(GlobalContext);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [targetUserId, setTargetUserId] = useState(null);
 
     // Handle scenario where doctor may not be available
-    if (!selectedDoctor) {
+    if (!selectedDoctor || !user) {
         return (
             <View style={layoutStyle.container}>
                 <Text style={typography.header}>Doctor Details</Text>
@@ -21,8 +24,15 @@ const DoctorDetails = () => {
 
     };
     const handleCallPress = (doctorId) => {
-
+        setTargetUserId(doctorId);
+        setModalVisible(true);
     };
+
+    const closeVideoCall = () => {
+        setModalVisible(false);
+        setTargetUserId(null);
+    };
+
     return (
         <View style={layoutStyle.container}>
             <Text style={typography.header}>{selectedDoctor?.fullName}</Text>
@@ -34,6 +44,22 @@ const DoctorDetails = () => {
             <Pressable style={buttons.primary} onPress={() => handleCallPress(selectedDoctor?.id)}>
                 <Text style={buttons.primaryText}>Call</Text>
             </Pressable>
+            <Modal
+
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={closeVideoCall}
+            >
+                <View style={layoutStyle.modalView}>
+                    {targetUserId && (
+                        <VideoCall
+                            targetUserId={targetUserId}
+                            closeVideoCall={closeVideoCall}
+                        />
+                    )}
+                    <Button title="Close Call" onPress={closeVideoCall} />
+                </View>
+            </Modal>
         </View>
     );
 };

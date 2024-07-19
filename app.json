@@ -21,12 +21,14 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "webpackConfig": "./webpack.config.js"
     },
     "plugins": [
       "@config-plugins/react-native-webrtc",
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      "react-native-video"
     ]
   }
 }

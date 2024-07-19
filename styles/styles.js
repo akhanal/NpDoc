@@ -52,6 +52,26 @@ export const layoutStyle = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
     },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    rtcView: {
+        width: 200,
+        height: 200,
+        margin: 10,
+    },
 });
 
 export const buttons = StyleSheet.create({
