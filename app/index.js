@@ -1,11 +1,11 @@
 // app/index.js (Login and default page)
 import React, {useContext, useEffect, useState} from 'react';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { View, Text, TextInput, ActivityIndicator, Pressable, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { GlobalContext } from '../context/GlobalContext';
 import { getStoredValue, storeValue } from '../utils/storage';
 import { colors, typography, layoutStyle, buttons, formStyles } from '../styles/styles';
+import config from '../config/config';
 
 export default function Index() {
     const { isLoading, setIsLoading, user, setUser } = useContext(GlobalContext);
@@ -50,7 +50,7 @@ export default function Index() {
             body: JSON.stringify({email: email, password: password})
         };
 
-        fetch('http://localhost:8080/api/login', requestOptions)
+        fetch(`http://${config.BASE_URL}/api/login`, requestOptions)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(response.statusText);

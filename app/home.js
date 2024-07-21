@@ -1,10 +1,10 @@
 // app/home.js (Home page)
-import {Link, router, useNavigation} from 'expo-router';
+import { router, useNavigation} from 'expo-router';
 import {View, Text, Pressable} from 'react-native';
 import React, {useContext, useEffect, useState} from "react";
 import {GlobalContext} from "../context/GlobalContext";
 import {getStoredValue} from "../utils/storage";
-
+import config from '../config/config';
 import { layoutStyle, typography, listStyles, colors } from '../styles/styles';
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
     const navigation = useNavigation();
 
     const fetchDoctors = () => {
-        fetch('http://localhost:8080/api/doctors')
+        fetch(`http://${config.BASE_URL}/api/doctors`)
             .then(response => response.json())
             .then(data => setDoctors(data))
             .catch(error => console.error('Error:', error));

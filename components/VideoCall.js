@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { View, Text, Button, Platform } from 'react-native';
 import { layoutStyle } from '../styles/styles';
 import getWebRTC from '../utils/getWebRTC';
+import config from '../config/config';
 
 const VideoCall = ({ user, targetUserId, closeVideoCall }) => {
     const [localStream, setLocalStream] = useState(null);
@@ -44,7 +45,7 @@ const VideoCall = ({ user, targetUserId, closeVideoCall }) => {
     }, [mediaDevices, user]);
 
     const startWebSocket = () => {
-        socket.current = new WebSocket('ws://localhost:8080/ws?userId=' + user.id);
+        socket.current = new WebSocket(`ws://${config.BASE_URL}/ws?userId=` + user.id);
 
         socket.current.onopen = () => {
             console.log('WebSocket connection opened');
