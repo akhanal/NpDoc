@@ -1,9 +1,8 @@
 // components/VideoCall.js
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, Platform } from 'react-native';
 import { GlobalContext } from '../context/GlobalContext';
 import { layoutStyle } from '../styles/styles';
-import { Platform } from 'react-native';
 import getWebRTC from '../utils/getWebRTC';
 
 const VideoCall = ({ targetUserId, closeVideoCall }) => {
@@ -14,7 +13,6 @@ const VideoCall = ({ targetUserId, closeVideoCall }) => {
     const [remoteStream, setRemoteStream] = useState(null);
     const peerConnection = useRef(null);
     const socket = useRef(null);
-
 
     const [RTCView, setRTCView] = useState(null);
     const [mediaDevices, setMediaDevices] = useState(null);
@@ -32,31 +30,22 @@ const VideoCall = ({ targetUserId, closeVideoCall }) => {
                 RTCIceCandidate,
             } = await getWebRTC();
 
-            setRTCView(RTCView);
-            setMediaDevices(mediaDevices);
-            setRTCPeerConnection(RTCPeerConnection);
-            setRTCSessionDescription(RTCSessionDescription);
-            setRTCIceCandidate(RTCIceCandidate);
-            console.log('set webRTC components from import')
-            console.log(mediaDevices);
-
+            setRTCView(() => RTCView);
+            setMediaDevices(() => mediaDevices);
+            setRTCPeerConnection(() => RTCPeerConnection);
+            setRTCSessionDescription(() => RTCSessionDescription);
+            setRTCIceCandidate(() => RTCIceCandidate);
         };
 
-        loadWebRTC().then(()=>{
-            console.log('webrtc loaded at this point');
-            console.log(mediaDevices);
+        loadWebRTC();
+    }, []);
 
+    useEffect(() => {
+        if (mediaDevices) {
             startWebSocket();
             startLocalStream();
-        });
-
-        return () => {
-            closeCall();
-            if (socket.current) {
-                socket.current.close();
-            }
-        };
-    }, []);
+        }
+    }, [mediaDevices]);
 
     const startWebSocket = () => {
         socket.current = new WebSocket('ws://localhost:8080/ws?userId=' + userId);
@@ -235,13 +224,13 @@ const VideoCall = ({ targetUserId, closeVideoCall }) => {
             <Text>Video Call</Text>
             {localStream && <RTCView
                 {...(Platform.OS === 'web'
-                    ? { stream: localStream}
+                    ? { stream: localStream }
                     : { stream: localStream.toURL() })}
                 style={layoutStyle.rtcView} />}
 
             {remoteStream && <RTCView
                 {...(Platform.OS === 'web'
-                    ? { stream: remoteStream}
+                    ? { stream: remoteStream }
                     : { stream: remoteStream.toURL() })}
                 style={layoutStyle.rtcView} />}
 
