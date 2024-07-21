@@ -1,14 +1,10 @@
 // components/VideoCall.js
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { View, Text, Button, Platform } from 'react-native';
-import { GlobalContext } from '../context/GlobalContext';
 import { layoutStyle } from '../styles/styles';
 import getWebRTC from '../utils/getWebRTC';
 
-const VideoCall = ({ targetUserId, closeVideoCall }) => {
-    const { user } = useContext(GlobalContext);
-    const isDoctor = user.userType === 'doctor';
-    const userId = user.userId;
+const VideoCall = ({ user, targetUserId, closeVideoCall }) => {
     const [localStream, setLocalStream] = useState(null);
     const [remoteStream, setRemoteStream] = useState(null);
     const peerConnection = useRef(null);
@@ -41,14 +37,14 @@ const VideoCall = ({ targetUserId, closeVideoCall }) => {
     }, []);
 
     useEffect(() => {
-        if (mediaDevices) {
+        if (mediaDevices && user) {
             startWebSocket();
             startLocalStream();
         }
-    }, [mediaDevices]);
+    }, [mediaDevices, user]);
 
     const startWebSocket = () => {
-        socket.current = new WebSocket('ws://localhost:8080/ws?userId=' + userId);
+        socket.current = new WebSocket('ws://localhost:8080/ws?userId=' + user.id);
 
         socket.current.onopen = () => {
             console.log('WebSocket connection opened');
@@ -175,7 +171,7 @@ const VideoCall = ({ targetUserId, closeVideoCall }) => {
     const sendCallOffer = (offer) => {
         const message = {
             type: 'callOffer',
-            userId: userId,
+            userId: user.id,
             targetUserId: targetUserId,
             offer: offer
         };
@@ -185,7 +181,7 @@ const VideoCall = ({ targetUserId, closeVideoCall }) => {
     const sendAnswer = (answer) => {
         const message = {
             type: 'answer',
-            userId: userId,
+            userId: user.id,
             targetUserId: targetUserId,
             answer: answer
         };
@@ -195,7 +191,7 @@ const VideoCall = ({ targetUserId, closeVideoCall }) => {
     const sendIceCandidate = (candidate) => {
         const message = {
             type: 'iceCandidate',
-            userId: userId,
+            userId: user.id,
             targetUserId: targetUserId,
             candidate: candidate
         };
@@ -205,7 +201,7 @@ const VideoCall = ({ targetUserId, closeVideoCall }) => {
     const sendEndCall = () => {
         const message = {
             type: 'endCall',
-            userId: userId,
+            userId: user.id,
             targetUserId: targetUserId
         };
         socket.current.send(JSON.stringify(message));
@@ -234,7 +230,7 @@ const VideoCall = ({ targetUserId, closeVideoCall }) => {
                     : { stream: remoteStream.toURL() })}
                 style={layoutStyle.rtcView} />}
 
-            {!isDoctor && <Button title="Start Call" onPress={startCall} />}
+            {user.id && <Button title="Start Call" onPress={startCall} />}
             <Button title="End Call" onPress={closeCall} />
         </View>
     );

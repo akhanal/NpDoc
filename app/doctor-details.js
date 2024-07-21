@@ -53,6 +53,7 @@ const DoctorDetails = () => {
                 <View style={layoutStyle.modalView}>
                     {targetUserId && (
                         <VideoCall
+                            user={user}
                             targetUserId={targetUserId}
                             closeVideoCall={closeVideoCall}
                         />
