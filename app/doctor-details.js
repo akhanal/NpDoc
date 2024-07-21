@@ -1,9 +1,9 @@
 // app/DoctorDetails.js
 import React, {useContext, useState} from 'react';
-import {View, Text, Pressable, Button} from 'react-native';
+import {View, Text, Pressable, Button, Modal} from 'react-native';
 import { layoutStyle, typography, buttons } from '../styles/styles';
 import {GlobalContext} from "../context/GlobalContext";
-import {VideoCall} from "../components/VideoCall";
+import VideoCall from "../components/VideoCall";
 
 const DoctorDetails = () => {
     const { user, selectedDoctor } = useContext(GlobalContext);

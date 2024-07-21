@@ -32,14 +32,20 @@ const VideoCall = ({ targetUserId, closeVideoCall }) => {
                 RTCIceCandidate,
             } = await getWebRTC();
 
-            setRTCView(() => RTCView);
-            setMediaDevices(() => mediaDevices);
-            setRTCPeerConnection(() => RTCPeerConnection);
-            setRTCSessionDescription(() => RTCSessionDescription);
-            setRTCIceCandidate(() => RTCIceCandidate);
+            setRTCView(RTCView);
+            setMediaDevices(mediaDevices);
+            setRTCPeerConnection(RTCPeerConnection);
+            setRTCSessionDescription(RTCSessionDescription);
+            setRTCIceCandidate(RTCIceCandidate);
+            console.log('set webRTC components from import')
+            console.log(mediaDevices);
+
         };
 
         loadWebRTC().then(()=>{
+            console.log('webrtc loaded at this point');
+            console.log(mediaDevices);
+
             startWebSocket();
             startLocalStream();
         });
@@ -85,6 +91,9 @@ const VideoCall = ({ targetUserId, closeVideoCall }) => {
     };
 
     const startLocalStream = () => {
+        console.log('Starting local stream');
+        console.log(mediaDevices);
+
         mediaDevices.getUserMedia({
             audio: true,
             video: true

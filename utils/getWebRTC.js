@@ -3,6 +3,7 @@ import { Platform } from 'react-native';
 
 const getWebRTC = async () => {
     if (Platform.OS === 'web') {
+        console.log('getWebRTC for web');
         const {
             RTCView,
             mediaDevices,
@@ -18,6 +19,7 @@ const getWebRTC = async () => {
             RTCIceCandidate,
         };
     } else {
+        console.log('getWebRTC for native');
         const {
             RTCView,
             mediaDevices,
