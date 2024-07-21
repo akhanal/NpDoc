@@ -1,9 +1,10 @@
 // components/VideoCall.js
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { View, Text, Button } from 'react-native';
-import { RTCView, mediaDevices, RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react-native-webrtc';
 import { GlobalContext } from '../context/GlobalContext';
 import { layoutStyle } from '../styles/styles';
+import { Platform } from 'react-native';
+import getWebRTC from '../utils/getWebRTC';
 
 const VideoCall = ({ targetUserId, closeVideoCall }) => {
     const { user } = useContext(GlobalContext);
@@ -14,9 +15,34 @@ const VideoCall = ({ targetUserId, closeVideoCall }) => {
     const peerConnection = useRef(null);
     const socket = useRef(null);
 
+
+    const [RTCView, setRTCView] = useState(null);
+    const [mediaDevices, setMediaDevices] = useState(null);
+    const [RTCPeerConnection, setRTCPeerConnection] = useState(null);
+    const [RTCSessionDescription, setRTCSessionDescription] = useState(null);
+    const [RTCIceCandidate, setRTCIceCandidate] = useState(null);
+
     useEffect(() => {
-        startWebSocket();
-        startLocalStream();
+        const loadWebRTC = async () => {
+            const {
+                RTCView,
+                mediaDevices,
+                RTCPeerConnection,
+                RTCSessionDescription,
+                RTCIceCandidate,
+            } = await getWebRTC();
+
+            setRTCView(() => RTCView);
+            setMediaDevices(() => mediaDevices);
+            setRTCPeerConnection(() => RTCPeerConnection);
+            setRTCSessionDescription(() => RTCSessionDescription);
+            setRTCIceCandidate(() => RTCIceCandidate);
+        };
+
+        loadWebRTC().then(()=>{
+            startWebSocket();
+            startLocalStream();
+        });
 
         return () => {
             closeCall();
@@ -187,11 +213,29 @@ const VideoCall = ({ targetUserId, closeVideoCall }) => {
         socket.current.send(JSON.stringify(message));
     };
 
+    if (!RTCView || !mediaDevices || !RTCPeerConnection || !RTCSessionDescription || !RTCIceCandidate) {
+        return (
+            <View>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
+
     return (
         <View style={layoutStyle.container}>
             <Text>Video Call</Text>
-            {localStream && <RTCView streamURL={localStream.toURL()} style={layoutStyle.rtcView} />}
-            {remoteStream && <RTCView streamURL={remoteStream.toURL()} style={layoutStyle.rtcView} />}
+            {localStream && <RTCView
+                {...(Platform.OS === 'web'
+                    ? { stream: localStream}
+                    : { stream: localStream.toURL() })}
+                style={layoutStyle.rtcView} />}
+
+            {remoteStream && <RTCView
+                {...(Platform.OS === 'web'
+                    ? { stream: remoteStream}
+                    : { stream: remoteStream.toURL() })}
+                style={layoutStyle.rtcView} />}
+
             {!isDoctor && <Button title="Start Call" onPress={startCall} />}
             <Button title="End Call" onPress={closeCall} />
         </View>
