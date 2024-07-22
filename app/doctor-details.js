@@ -1,8 +1,8 @@
-// app/DoctorDetails.js
-import React, {useContext, useState} from 'react';
-import {View, Text, Pressable, Button, Modal} from 'react-native';
+// app/doctor-details.js
+import React, { useContext, useState } from 'react';
+import { View, Text, Pressable, Button, Modal } from 'react-native';
 import { layoutStyle, typography, buttons } from '../styles/styles';
-import {GlobalContext} from "../context/GlobalContext";
+import { GlobalContext } from "../context/GlobalContext";
 import VideoCall from "../components/VideoCall";
 
 const DoctorDetails = () => {
@@ -21,8 +21,9 @@ const DoctorDetails = () => {
     }
 
     const handleChatPress = (doctorId) => {
-
+        // Logic to handle chat press
     };
+
     const handleCallPress = (doctorId) => {
         setTargetUserId(doctorId);
         setModalVisible(true);
@@ -45,7 +46,6 @@ const DoctorDetails = () => {
                 <Text style={buttons.primaryText}>Call</Text>
             </Pressable>
             <Modal
-
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={closeVideoCall}

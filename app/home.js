@@ -1,9 +1,9 @@
-// app/home.js (Home page)
-import { router, useNavigation} from 'expo-router';
-import {View, Text, Pressable} from 'react-native';
-import React, {useContext, useEffect, useState} from "react";
-import {GlobalContext} from "../context/GlobalContext";
-import {getStoredValue} from "../utils/storage";
+// app/home.js
+import { router, useNavigation } from 'expo-router';
+import { View, Text, Pressable } from 'react-native';
+import React, { useContext, useEffect, useState } from "react";
+import { GlobalContext } from "../context/GlobalContext";
+import { getStoredValue } from "../utils/storage";
 import config from '../config/config';
 import { layoutStyle, typography, listStyles, colors } from '../styles/styles';
 
@@ -30,7 +30,7 @@ export default function Home() {
     // try to load user from storage
     useEffect(() => {
         fetchDoctors();
-        if(!user) {
+        if (!user) {
             getStoredValue('user').then((res) => {
                 console.log('retrieved user from store in home page');
                 setUser(res);
@@ -46,7 +46,7 @@ export default function Home() {
         }
     }, [isLoading, user]);
 
-    if(user && !isLoading) {
+    if (user && !isLoading) {
         return (
             <View style={layoutStyle.container}>
                 <Text style={[typography.header, { marginBottom: 10 }]}>Welcome! {user.fullName}</Text>
@@ -67,5 +67,5 @@ export default function Home() {
             </View>
         );
     }
-    return null;//
+    return null; //
 }

@@ -1,11 +1,11 @@
-// components/VideoCall.js
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import { View, Text, Button, Platform } from 'react-native';
+// components/DoctorVideoCall.js
+import React, { useState, useEffect, useRef } from 'react';
+import {View, Text, Button, Platform} from 'react-native';
 import { layoutStyle } from '../styles/styles';
 import getWebRTC from '../utils/getWebRTC';
 import config from '../config/config';
 
-const VideoCall = ({ user, targetUserId, closeVideoCall }) => {
+const DoctorVideoCall = ({ callRequest }) => {
     const [localStream, setLocalStream] = useState(null);
     const [remoteStream, setRemoteStream] = useState(null);
     const peerConnection = useRef(null);
@@ -38,14 +38,14 @@ const VideoCall = ({ user, targetUserId, closeVideoCall }) => {
     }, []);
 
     useEffect(() => {
-        if (mediaDevices && user) {
+        if (mediaDevices) {
             startWebSocket();
             startLocalStream();
         }
-    }, [mediaDevices, user]);
+    }, [mediaDevices]);
 
     const startWebSocket = () => {
-        socket.current = new WebSocket(`ws://${config.BASE_URL}/ws?userId=${user.id}`);
+        socket.current = new WebSocket(`ws://${config.BASE_URL}/ws?userId=${callRequest.doctorId}`);
 
         socket.current.onopen = () => {
             console.log('WebSocket connection opened');
@@ -55,12 +55,6 @@ const VideoCall = ({ user, targetUserId, closeVideoCall }) => {
             const data = JSON.parse(event.data);
 
             switch (data.type) {
-                case 'callStarted':
-                    handleCallStarted(data.initiatingUser);
-                    break;
-                case 'callEnded':
-                    handleCallEnded();
-                    break;
                 case 'callOffer':
                     handleCallOffer(data.offer);
                     break;
@@ -77,9 +71,6 @@ const VideoCall = ({ user, targetUserId, closeVideoCall }) => {
     };
 
     const startLocalStream = () => {
-        console.log('Starting local stream');
-        console.log(mediaDevices);
-
         mediaDevices.getUserMedia({
             audio: true,
             video: true
@@ -88,42 +79,6 @@ const VideoCall = ({ user, targetUserId, closeVideoCall }) => {
         }).catch(error => {
             console.error('Failed to get local stream', error);
         });
-    };
-
-    const startCall = () => {
-        peerConnection.current = new RTCPeerConnection();
-        peerConnection.current.onicecandidate = handleIceCandidateEvent;
-        peerConnection.current.ontrack = handleTrackEvent;
-
-        localStream.getTracks().forEach(track => {
-            peerConnection.current.addTrack(track, localStream);
-        });
-
-        peerConnection.current.createOffer().then(offer => {
-            return peerConnection.current.setLocalDescription(offer);
-        }).then(() => {
-            sendCallOffer(peerConnection.current.localDescription);
-        }).catch(error => {
-            console.error('Failed to start call', error);
-        });
-    };
-
-    const closeCall = () => {
-        if (peerConnection.current) {
-            peerConnection.current.close();
-            peerConnection.current = null;
-        }
-        setRemoteStream(null);
-        sendEndCall();
-    };
-
-    const handleCallStarted = (initiatingUser) => {
-        console.log('Call started by', initiatingUser);
-    };
-
-    const handleCallEnded = () => {
-        closeCall();
-        closeVideoCall();
     };
 
     const handleCallOffer = (offer) => {
@@ -169,21 +124,11 @@ const VideoCall = ({ user, targetUserId, closeVideoCall }) => {
         setRemoteStream(event.streams[0]);
     };
 
-    const sendCallOffer = (offer) => {
-        const message = {
-            type: 'callOffer',
-            userId: user.id,
-            targetUserId: targetUserId,
-            offer: offer
-        };
-        socket.current.send(JSON.stringify(message));
-    };
-
     const sendAnswer = (answer) => {
         const message = {
             type: 'answer',
-            userId: user.id,
-            targetUserId: targetUserId,
+            userId: callRequest.doctorId,
+            targetUserId: callRequest.patientId,
             answer: answer
         };
         socket.current.send(JSON.stringify(message));
@@ -192,18 +137,27 @@ const VideoCall = ({ user, targetUserId, closeVideoCall }) => {
     const sendIceCandidate = (candidate) => {
         const message = {
             type: 'iceCandidate',
-            userId: user.id,
-            targetUserId: targetUserId,
+            userId: callRequest.doctorId,
+            targetUserId: callRequest.patientId,
             candidate: candidate
         };
         socket.current.send(JSON.stringify(message));
     };
 
+    const closeCall = () => {
+        if (peerConnection.current) {
+            peerConnection.current.close();
+            peerConnection.current = null;
+        }
+        setRemoteStream(null);
+        sendEndCall();
+    };
+
     const sendEndCall = () => {
         const message = {
             type: 'endCall',
-            userId: user.id,
-            targetUserId: targetUserId
+            userId: callRequest.doctorId,
+            targetUserId: callRequest.patientId
         };
         socket.current.send(JSON.stringify(message));
     };
@@ -218,7 +172,7 @@ const VideoCall = ({ user, targetUserId, closeVideoCall }) => {
 
     return (
         <View style={layoutStyle.container}>
-            <Text>Video Call</Text>
+            <Text>Doctor Video Call</Text>
             {localStream && <RTCView
                 {...(Platform.OS === 'web'
                     ? { stream: localStream }
@@ -231,10 +185,9 @@ const VideoCall = ({ user, targetUserId, closeVideoCall }) => {
                     : { stream: remoteStream.toURL() })}
                 style={layoutStyle.rtcView} />}
 
-            {user.id && <Button title="Start Call" onPress={startCall} />}
             <Button title="End Call" onPress={closeCall} />
         </View>
     );
 };
 
-export default VideoCall;
+export default DoctorVideoCall;

@@ -1,5 +1,5 @@
 // app/index.js (Login and default page)
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { View, Text, TextInput, ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import { GlobalContext } from '../context/GlobalContext';
@@ -21,15 +21,18 @@ export default function Index() {
             setUser(res);
             setIsLoading(false);
         });
-
     }, []);
 
-    // if there is user in local storage, go to home page
+    // if there is user in local storage, go to appropriate page based on userType
     useEffect(() => {
         if (!isLoading && user) {
-            router.push("/home");
+            if (user.userType === 'DOCTOR') {
+                router.push("/doctor-home");
+            } else {
+                router.push("/home");
+            }
         } else if (!isLoading) {
-
+            // If no user, stay on the login page
         }
     }, [isLoading, user]);
 
@@ -47,7 +50,7 @@ export default function Index() {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({email: email, password: password})
+            body: JSON.stringify({ email: email, password: password })
         };
 
         fetch(`http://${config.BASE_URL}/api/login`, requestOptions)
@@ -67,7 +70,13 @@ export default function Index() {
                         userType: data.userType
                     };
                     setUser(loggedInUser);
-                    storeValue('user', loggedInUser).then(()=>router.push('/home'));
+                    storeValue('user', loggedInUser).then(() => {
+                        if (loggedInUser.userType === 'DOCTOR') {
+                            router.push("/doctor-home");
+                        } else {
+                            router.push("/home");
+                        }
+                    });
                 } else {
                     alert('Invalid credentials');
                 }
