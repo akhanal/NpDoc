@@ -11,23 +11,30 @@ NpDoc is a mobile application that facilitates interaction between patients and 
 
 ## Code Organization
 ```plaintext
-NpDoc/
-├── app/
-│   ├── _layout.js           # Defines the app layout and routes
-│   ├── index.js             # Landing page for login
-│   ├── home.js              # Home page displaying list of doctors
-│   ├── doctor-details.js    # Doctor details page
-│   └── components/
-│       └── DoctorList.js    # Component to list doctors
-├── context/
-│   └── GlobalContext.js     # Global context to manage user state
-├── utils/
-│   └── storage.js           # Utility functions for local storage
-├── styles/
-│   └── styles.js            # Contains styles for colors, typography, layout, buttons, lists, and forms
-├── babel.config.js          # Babel configuration file
-├── package.json             # Project metadata and dependencies
-└── README.md                # Project documentation
+├── NpDoc/
+│   ├── app.json
+│   ├── README.md
+│   ├── babel.config.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── context/
+│   │   ├── GlobalContext.js
+│   ├── app/
+│   │   ├── index.js
+│   │   ├── home.js
+│   │   ├── doctor-details.js
+│   │   ├── doctor-home.js (New)
+│   │   ├── _layout.js
+│   ├── config/
+│   │   ├── config.js
+│   ├── utils/
+│   │   ├── getWebRTC.js
+│   │   ├── storage.js
+│   ├── styles/
+│   │   ├── styles.js
+│   ├── components/
+│   │   ├── VideoCall.js
+│   │   ├── DoctorVideoCall.js (New)
 ```
 
 ### Main Components
@@ -64,6 +71,25 @@ NpDoc/
     - **File:** `styles/styles.js`
     - **Description:** Contains style definitions for colors, typography, layout, buttons, lists, and forms.
 
+### About WebRTC
+```plaintext
+Client1         Signaling Server        Client2
+   |                   |                   |
+   |---Offer (SDP)---->|                   |
+   |                   |---Offer (SDP)---->|
+   |                   |                   |
+   |                   |<--Answer (SDP)----|
+   |<--Answer (SDP)----|                   |
+   |                   |                   |
+   |---ICE Candidate-->|                   |
+   |                   |---ICE Candidate-->|
+   |                   |                   |
+   |<--ICE Candidate---|                   |
+   |                   |<--ICE Candidate---|
+   |                   |                   |
+   |<-- Direct Peer-to-Peer Connection --->|
+   |                   |                   |
+```
 ## Project Setup
 
 To set up and run the project locally:
